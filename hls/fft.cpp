@@ -50,11 +50,18 @@ void fft(hls::stream<axis_data> &dataInStream,hls::stream<axis_data> &dataOutStr
 #pragma HLS PIPELINE
 
 		input_stream=dataInStream.read();
-		iidata.ival=input_stream.data;
+		//inputData.data=input_stream.data;
 
-		//data_in[i]=data_comp(inputData.complex.Re,inputData.complex.Im);
+		//inputData.data.Re=(int32_t)(0xFFFFFFFF&input_stream.data);
+		//inputData.data.Im=(int32_t)(0xFFFFFFFF&(input_stream.data>>32));
 
-		data_in[i]=data_comp(iidata.fval);
+		inputData.reg=input_stream.data;
+
+		//iidata.ival=input_stream.data;
+
+		data_in[i]=data_comp(inputData.complex.Re,inputData.complex.Im);
+
+		//data_in[i]=data_comp(iidata.fval);
 
 
 	}
@@ -83,7 +90,9 @@ void fft(hls::stream<axis_data> &dataInStream,hls::stream<axis_data> &dataOutStr
 
 			outputData.complex.Re=real(data_OUT1[i]);
 			outputData.complex.Im=imag(data_OUT1[i]);
-			output_stream.data=outputData.data.Re;
+			//output_stream.data=(int64_t)(outputData.data.Im)<<32|(int64_t)(outputData.data.Re);
+			output_stream.data=outputData.reg;
+
 
 /*			odata.complexValueStruct.real=real(data_OUT1[i]);
 			odata.complexValueStruct.imag=imag(data_OUT1[i]);
@@ -100,7 +109,8 @@ void fft(hls::stream<axis_data> &dataInStream,hls::stream<axis_data> &dataOutStr
 
 		outputData.complex.Re=real(data_OUT1[FFT_LENGTH-1]);
 		outputData.complex.Im=imag(data_OUT1[FFT_LENGTH-1]);
-		output_stream.data=outputData.data.Re;
+		//output_stream.data=(int64_t)(outputData.data.Im)<<32|(int64_t)(outputData.data.Re);
+		output_stream.data=outputData.reg;
 
 /*		odata.complexValueStruct.real=real(data_OUT1[FFT_LENGTH-1]);
 		odata.complexValueStruct.imag=imag(data_OUT1[FFT_LENGTH-1]);
@@ -127,7 +137,8 @@ void fft(hls::stream<axis_data> &dataInStream,hls::stream<axis_data> &dataOutStr
 
 			outputData.complex.Re=real(data_OUT0[i]);
 			outputData.complex.Im=imag(data_OUT0[i]);
-			output_stream.data=outputData.data.Re;
+			//output_stream.data=(int64_t)(outputData.data.Im)<<32|(int64_t)(outputData.data.Re);
+			output_stream.data=outputData.reg;
 
 			output_stream.keep=input_stream.keep;
 			output_stream.strb=input_stream.strb;
@@ -143,7 +154,8 @@ void fft(hls::stream<axis_data> &dataInStream,hls::stream<axis_data> &dataOutStr
 
 		outputData.complex.Re=real(data_OUT0[FFT_LENGTH-1]);
 		outputData.complex.Im=imag(data_OUT0[FFT_LENGTH-1]);
-		output_stream.data=outputData.data.Re;
+		//output_stream.data=(int64_t)(outputData.data.Im)<<32|(int64_t)(outputData.data.Re);
+		output_stream.data=outputData.reg;
 
 		output_stream.keep=input_stream.keep;
 		output_stream.strb=input_stream.strb;
