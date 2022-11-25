@@ -9,8 +9,8 @@
 #include <ap_int.h>
 #include <hls_stream.h>
 
-#define FFT_LENGTH 1024
-#define NO_STAGES 10
+#define FFT_LENGTH 16
+#define NO_STAGES 4
 
 using namespace std;
 
@@ -27,19 +27,6 @@ union fpint {
 	};
 
 
-union compint {
-		int ival;		// integer alias
-		data_comp complexValUnion;		// complex-point alias
-	};
-
-
-union compintt {
-		int ival;		// integer alias
-		struct {
-			float real;
-			float imag;
-		}complexValueStruct;	// complex-point alias
-	};
 
 typedef struct{
 	float Re;
@@ -54,8 +41,8 @@ typedef struct{
 }Data;
 
 typedef union{
-	Complex complex;
-	Data data;
+	Complex complex; //complex alias
+	int64_t reg;   //integer alias
 }ComplexData;
 
 
@@ -65,8 +52,6 @@ typedef union{
 	ap_uint<1> last;
 
 };*/
-
-//void fft(hls::stream<axis_data> &dataInStream,hls::stream<axis_data> &dataOutStream);
 
 void fft(hls::stream<axis_data> &dataInStream,hls::stream<axis_data> &dataOutStream);
 #endif
